@@ -1,0 +1,221 @@
+@font-face {
+  font-family: "PressStart2P";
+  src: url("assets/tuxemon/font/PressStart2P.ttf") format("truetype");
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #181820;
+  color: #e8e8e8;
+  font-family: "PressStart2P", monospace;
+}
+
+#screen {
+  position: relative;
+  width: 960px;
+  height: 624px;
+  overflow: hidden;
+  background: #000;
+  font-family: "PressStart2P", monospace;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #282828;
+  user-select: none;
+}
+
+#help { font-size: 10px; color: #9a9aa8; margin-top: 12px; }
+
+#world {
+  position: absolute;
+  inset: 0;
+  width: 960px;
+  height: 624px;
+  image-rendering: pixelated;
+}
+
+.hidden { display: none !important; }
+
+.box {
+  border-style: solid;
+  border-width: 18px;
+  border-image: url("assets/tuxemon/ui/borders.png") 6 fill / 18px;
+  image-rendering: pixelated;
+  background-clip: padding-box;
+}
+
+/* ---------- overworld labels (door plates, badges, tool marks) ---------- */
+#labels { position: absolute; inset: 0; pointer-events: none; }
+.plate, .badge, .toolmark {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  font-size: 8px;
+  line-height: 1;
+  white-space: nowrap;
+  padding: 3px 4px;
+  background: #fff;
+  border: 2px solid #282828;
+  color: #282828;
+}
+.badge { background: #ffd23f; padding: 2px 3px; }
+.toolmark { font-size: 14px; padding: 2px 3px; font-family: "Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", sans-serif; }
+.toolmark.npc { border-color: #e0a020; }
+
+/* ---------- HUD ---------- */
+#hud { position: absolute; inset: 0; pointer-events: none; }
+.hud-box {
+  position: absolute;
+  font-size: 12px;
+  line-height: 1;
+  padding: 8px 10px;
+  background: rgba(255, 255, 255, 0.92);
+  border: 3px solid #282828;
+  border-radius: 4px;
+}
+#hud-clock { top: 8px; left: 8px; }
+#hud-area { top: 8px; right: 8px; }
+#hud-status { bottom: 8px; left: 8px; font-size: 10px; line-height: 1.6; }
+
+/* ---------- dialog & menus ---------- */
+#dialog {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 168px;
+  padding: 6px 12px;
+  white-space: pre-wrap;
+  z-index: 60;
+}
+#dialog .more { position: absolute; right: 8px; bottom: 0; animation: blink 0.8s steps(1) infinite; }
+#dialog.with-portrait { padding-left: 120px; }
+#dialog .portrait { position: absolute; left: 6px; top: 6px; background-repeat: no-repeat; image-rendering: pixelated; }
+#dialog input {
+  display: block;
+  margin-top: 8px;
+  font: inherit;
+  width: 300px;
+  padding: 6px;
+  border: 3px solid #282828;
+  background: #fff;
+  color: #282828;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+#menu {
+  position: absolute;
+  right: 0;
+  bottom: 168px;
+  min-width: 320px;
+  max-width: 640px;
+  padding: 4px 8px;
+  z-index: 61;
+}
+#menu .title { font-size: 12px; color: #606060; margin-bottom: 4px; }
+.row { position: relative; padding: 4px 4px 4px 28px; }
+.row.cur::before { content: "▶"; position: absolute; left: 4px; }
+.row.disabled { color: #a0a0a0; }
+#menu.wide { left: 0; right: 0; max-width: none; bottom: 168px; font-size: 11px; line-height: 1.45; }
+#menu.wide .row { white-space: normal; }
+#menu.wide .row.cur { background: #fdf0c8; }
+
+/* ---------- side panel (building occupants) ---------- */
+#panel {
+  position: absolute;
+  top: 56px;
+  right: 8px;
+  width: 400px;
+  max-height: 380px;
+  overflow: hidden;
+  font-size: 11px;
+  padding: 4px 6px;
+  z-index: 10;
+}
+#panel h2 { font-size: 13px; margin: 0 0 6px; font-weight: normal; }
+#panel .occ { display: flex; align-items: center; gap: 8px; padding: 3px 4px 3px 24px; position: relative; }
+#panel .occ.cur::before { content: "▶"; position: absolute; left: 4px; }
+#panel .occ .thumb { flex: none; width: 32px; height: 32px; image-rendering: pixelated; background-repeat: no-repeat; }
+#panel .occ .who { flex: 1; }
+#panel .occ .act { display: block; color: #606060; font-size: 9px; }
+#panel .occ .alert { width: 32px; height: 32px; image-rendering: pixelated; background-size: 32px 32px; }
+#panel .empty { color: #707070; padding: 4px; }
+#panel .hint { color: #707070; font-size: 9px; margin-top: 6px; }
+#panel h3 { font-size: 11px; margin: 8px 0 4px; font-weight: normal; color: #606060; }
+#panel .tool .thumb {
+  font-size: 20px; line-height: 32px; text-align: center;
+  font-family: "Noto Color Emoji", "Apple Color Emoji", "Segoe UI Emoji", sans-serif;
+}
+
+/* ---------- full sheets: log, mind, pause, summary ---------- */
+#sheet {
+  position: absolute;
+  top: 24px;
+  left: 40px;
+  right: 40px;
+  bottom: 24px;
+  font-size: 12px;
+  line-height: 1.7;
+  padding: 6px 12px;
+  overflow: hidden;
+  z-index: 20;
+}
+#sheet h2 { font-size: 15px; margin: 0 0 10px; font-weight: normal; }
+#sheet .list { overflow: hidden; }
+#sheet .item { position: relative; padding: 2px 4px 2px 24px; white-space: pre-wrap; }
+#sheet .item.cur::before { content: "▶"; position: absolute; left: 4px; }
+#sheet .item.chosen { font-weight: bold; color: #b03010; }
+#sheet .muted { color: #707070; }
+#sheet pre { font: inherit; font-size: 10px; white-space: pre-wrap; margin: 6px 0; color: #404040; }
+#sheet .hint { position: absolute; bottom: 0; right: 4px; font-size: 10px; color: #707070; }
+
+/* ---------- toasts & flash ---------- */
+#toast {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 52px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  pointer-events: none;
+  z-index: 40;
+}
+#toast div {
+  font-size: 10px;
+  line-height: 1.5;
+  max-width: 700px;
+  padding: 6px 10px;
+  background: rgba(40, 40, 40, 0.88);
+  color: #fff;
+  border-radius: 4px;
+}
+#flash { position: absolute; inset: 0; background: #fff; opacity: 0; pointer-events: none; z-index: 45; }
+#flash.on { animation: flash 300ms linear; }
+@keyframes flash { 0%, 100% { opacity: 0; } 30%, 70% { opacity: 1; } }
+
+/* ---------- title ---------- */
+#title {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  text-align: center;
+  color: #fff;
+  background: url("assets/tuxemon/ui/sunset_background.png") center / 960px 405px no-repeat, #203048;
+  image-rendering: pixelated;
+}
+#title h1 { font-size: 56px; font-weight: normal; margin: 0; color: #ffd23f; text-shadow: 4px 4px 0 #803010; }
+#title .sub { font-size: 12px; max-width: 760px; line-height: 1.8; text-shadow: 2px 2px 0 #000; }
+#title .press { font-size: 16px; animation: blink 1.2s steps(1) infinite; text-shadow: 2px 2px 0 #000; }
+#title .credit { font-size: 9px; color: #c0c0d0; text-shadow: 1px 1px 0 #000; }
